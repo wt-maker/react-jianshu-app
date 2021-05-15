@@ -1,5 +1,5 @@
-import Header from './common/header'
-import { GlobalStyle } from './style'
+import Header from './common/header';
+import { GlobalStyle } from './style';
 function App() {
   return (
     <>
