@@ -3,12 +3,14 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { headerReducer } from './common/header/store';
 import { homeReducer } from './pages/home/store'
 import { detailReducer } from './pages/detail/store';
+import { loginReducer } from './pages/login/store';
 import thunk from 'redux-thunk';
 
 const reducer = combineReducers({
   headerStore: headerReducer,
   homeStore: homeReducer,
-  detailStore: detailReducer
+  detailStore: detailReducer,
+  loginStore: loginReducer
 });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, composeEnhancers(

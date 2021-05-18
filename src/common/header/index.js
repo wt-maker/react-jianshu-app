@@ -13,9 +13,11 @@ import { HeaderWrapper,
   SearchInfoSwitch,
   SearchInfoItem,
   SearchInfoList
-} from './style'
+} from './style';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { action } from './store'
+import { loginAction } from '../../pages/login/store';
 
 function Header(props) {
 
@@ -28,7 +30,9 @@ function Header(props) {
     handleMouseLeave,
     mouseIn,
     currentPage,
-    changePage
+    changePage,
+    loginStatus,
+    logout
   } = props;
 
   let spinRef = React.createRef();
@@ -60,7 +64,9 @@ function Header(props) {
 
   return (
     <HeaderWrapper>
-      <Logo />
+      <Link to="/">
+        <Logo />
+      </Link>
       <Nav>
         <NavItem className="nav-left active">
           <span className="iconfont zoom">&#xe693;</span>首页
@@ -79,12 +85,23 @@ function Header(props) {
           <span className={(focused || mouseIn)? "focused iconfont zoom": "iconfont zoom"}>&#xe604;</span>
           {(focused || mouseIn) && getSearchInfoArea()}
         </NavSearchWrapper>
-        <NavItem className="nav-right">登录</NavItem>
+        {
+          !loginStatus? (
+            <Link to="/login">
+              <NavItem className="nav-right">登录</NavItem>
+            </Link>
+          ): (
+            <NavItem className="nav-right" onClick={logout}>登出</NavItem>
+          )
+        }
+        
         <NavItem className="nav-right"><span className="iconfont zoom">&#xe636;</span></NavItem>
       </Nav>
       <Addition>
         <Button className="regist">注册</Button>
-        <Button className="write"><span className="iconfont zoom">&#xe601;</span>写文章</Button>
+        <Link to="/writer">
+          <Button className="write"><span className="iconfont zoom">&#xe601;</span>写文章</Button>
+        </Link>
       </Addition>
     </HeaderWrapper>
   )
@@ -95,7 +112,8 @@ const mapStateToProps = (state) => ({
   list: state.get('headerStore').get('list'),
   mouseIn: state.get('headerStore').get('mouseIn'),
   totalPage: state.get('headerStore').get('totalPage'),
-  currentPage: state.get('headerStore').get('currentPage')
+  currentPage: state.get('headerStore').get('currentPage'),
+  loginStatus: state.getIn(['loginStore', 'loginStatus'])
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -117,7 +135,8 @@ const mapDispatchToProps = (dispatch) => ({
     }
     spin.style.transform = `rotate(${originAngle+360}360deg)`;
     dispatch(action.change_page(currentPage))
-  }
+  },
+  logout: () => dispatch(loginAction.change_logout_action())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
